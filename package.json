@@ -1,0 +1,18 @@
+{
+  "name": "licensethief",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "gulp": "^3.8.11",
+    "rimraf": "^2.3.1",
+    "querystring": "*",
+    "iconv-lite": "*",
+    "log4js": "*"
+  },
+  "author": "",
+  "license": "ISC"
+}
