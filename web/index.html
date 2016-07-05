@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/sb-admin-2.css" rel="stylesheet">
+    <link href="./css/timeline.css" rel="stylesheet">
+    <link href="../bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+    <link href="../bower_components/morrisjs/morris.css" rel="stylesheet">
+    <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="wrapper">
+    <div id="loading" style="display: none; position: absolute; top: 10px; right: 10px; z-index: 9000">
+        <i class="fa fa-5x fa-spin fa-spinner"></i>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="index.html">License Thief</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Лицензии</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Лицензии</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="license-buttons" class="panel-body">
+
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> Предпросмотр
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="row">
+                                <div class="table-responsive">
+                                    <table id="preview-table" class="table table-bordered table-hover table-striped">
+                                        <thead></thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-8 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div id="map" style="/* display: none; */ position: absolute; width: 100%; height: 500px; z-index: 9000;"></div>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<script src="//api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+<script src="js/jquery-2.2.4.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/sb-admin-2.js"></script>
+<script src="../bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+<script>
+    var module = {};
+</script>
+<script src="../conf/app.js"></script>
+<script src="./js/web.js"></script>
+</body>
+</html>

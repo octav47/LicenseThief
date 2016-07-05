@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 var $ = require('../conf/app.js');
 
@@ -7,9 +7,16 @@ var formatDate = require('./utils/date.js').formatDate;
 var fs = require('fs');
 var queryString = require('querystring');
 var http = require('http');
+var syncRequest = require('sync-request');
 var iconv = require('iconv-lite');
 var logger = require('log4js').getLogger();
 
+var $chunk = $.setting.chunk;
+
+/**
+ * @param {string} w
+ * @returns {object}
+ */
 function parseChunk(w) {
     var result = [],
         result2 = [];
@@ -36,7 +43,12 @@ function parseChunk(w) {
                     .replace(/[&nbsp;]/gmi, '');
                 var tmpArray = tmp[j].split('</td><td>');
 
-                var geo = [];
+                var geo;
+                if ($.setting.geo) {
+                    geo = JSON.parse(syncRequest('POST', 'https://www.rfgf.ru/license/coordsrv.php?id=' + id).getBody('utf-8'));
+                } else {
+                    geo = [];
+                }
 
                 //var geo = JSON.parse($.ajax({
                 //    url: 'https://www.rfgf.ru/license/coordsrv.php?id=' + id,
@@ -50,7 +62,7 @@ function parseChunk(w) {
                 //console.log(geo);
 
                 if (geo.length > 1) {
-                    throw 'ERROR';
+                    logger.error('Geo with length > 1 is found! License ID: ' + id);
                 } else if (geo.length == 1) {
                     delete geo[0]['GRAPH_TYPE'];
                     delete geo[0]['Weight'];
@@ -143,13 +155,17 @@ function parseChunk(w) {
  * @param settings
  */
 function getSingleLicense(settings) {
+    var httpListener = settings.httpListener;
+
+    var vidpi = settings.data.vidpi;
+
     var page = settings.data.page;
 
     var data = queryString.stringify({
         ftext: '',
         lnum: '',
         'pigroup[]': [-1],
-        'vidpi[]': settings.data.vidpi,
+        'vidpi[]': vidpi,
         //'geo[]': [3607],
         dtactual: '',
         dtactual1: '',
@@ -188,32 +204,44 @@ function getSingleLicense(settings) {
                 //responseString += chunk;
             });
             res.on('end', function (e) {
-                var r = parseChunk(responseString),
-                    fileName;
-                if (r.success + [] !== '') {
-                    fileName = $.output.success + 'response-' + page + '.txt';
+                httpListener.inc();
+
+                var r = parseChunk(responseString);
+
+                var fileName;
+                if ($chunk && r.success + [] !== '') {
+                    fileName = $.output.success + 'response-' + page + '.json';
                     fs.writeFileSync(fileName, JSON.stringify(r.success, null, 4), 'utf-8');
                     logger.info('File ' + fileName + ' is written');
                 }
-                if (r.problem + [] !== '') {
-                    fileName = $.output.problem + 'response-' + page + '.txt';
+                if ($chunk && r.problem + [] !== '') {
+                    fileName = $.output.problem + 'response-' + page + '.json';
                     fs.writeFileSync(fileName, JSON.stringify(r.problem, null, 4), 'utf-8');
                     logger.info('File ' + fileName + ' is written');
                 }
-                if (r.noGeoObj + [] !== '') {
-                    fileName = $.output.noGeoObj + 'response-' + page + '.txt';
+                if ($chunk && r.noGeoObj + [] !== '') {
+                    fileName = $.output.noGeoObj + 'response-' + page + '.json';
                     fs.writeFileSync(fileName, JSON.stringify(r.noGeoObj, null, 4), 'utf-8');
                     logger.info('File ' + fileName + ' is written');
                 }
 
-                for (var i = 0; i < r.noGeoObj.length; i++) {
-                    var element = r.success[i];
-                    if ($.fullData[element.id]) {
-                        logger.warning('License ID:' + element.id + ' is already exists. Skipping...');
-                    } else {
-                        $.fullData[element.id] = element;
-                    }
+                var f1 = appendFullData(r.success);
+                var f2 = appendFullData(r.problem);
+                //var f1 = false, f2 = false;
+                var f3 = appendFullData(r.noGeoObj);
+
+                if (!f1 && !f2 && !f3) {
+                    logger.info('Saving ' + vidpi[0] + '.json');
+                    var totalFileName = $.output.specifiedTotal(vidpi[0]);
+                    fs.writeFileSync(totalFileName, JSON.stringify($.fullData, null, 4), 'utf-8');
+                    $.fullData = {};
+                    httpListener.fulfill();
+                    return;
                 }
+
+                logger.debug('Page ' + settings.data.page + ' is ended, next...');
+                settings.data.page++;
+                getSingleLicense(settings);
             });
             res.on('error', function (e) {
                 logger.error(e.message);
@@ -222,7 +250,29 @@ function getSingleLicense(settings) {
 
         req.write(data);
         req.end();
-    }, $.request.timeout * page);
+    }, 1);
+}
+
+/**
+ * Сохраняет данные по лицензии в $.fullData
+ * @param {Array} r
+ * @returns {boolean}
+ */
+function appendFullData(r) {
+    if (r.length === 0) {
+        return false;
+    }
+    for (var i = 0; i < r.length; i++) {
+        var element = r[i];
+        if ($.fullData[element.id]) {
+            //console.dir(element);
+            logger.debug('License ID:' + element.id + ' is already exists. Skipping...');
+            return false;
+        } else {
+            $.fullData[element.id] = element;
+        }
+    }
+    return true;
 }
 
 /**
