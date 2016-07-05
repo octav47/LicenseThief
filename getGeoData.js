@@ -11,7 +11,7 @@ logger = logger.getLogger();
 
 var i = 0;
 
-function dfs(i) {
+function getGeoData(i) {
     var count = 0;
 
     if (i == 11) {
@@ -73,7 +73,7 @@ function dfs(i) {
                             if (requestsCount < 1) {
                                 fs.writeFile($.output.geoData + 'json/' + (i + 1) + '.json', JSON.stringify(json, null, 4), 'utf-8');
                                 logger.warn('DONE: ' + (i + 1) + '.json');
-                                dfs(i + 1);
+                                getGeoData(i + 1);
                             }
                         })
                     });
@@ -86,4 +86,4 @@ function dfs(i) {
     }
 }
 
-dfs(i);
+module.exports.getGeoData = getGeoData;

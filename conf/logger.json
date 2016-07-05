@@ -1,14 +1,22 @@
 {
   "appenders": [
     {
-      "type": "console"
+      "type": "console",
+      "level": "INFO"
     },
     {
       "type": "file",
-      "filename": "log/log_file.log",
+      "filename": "log/console.log",
       "maxLogSize": 20480,
-      "backups": 10,
-      "category": "relative-logger"
+      "backups": 10
+    },
+    {
+      "type": "logLevelFilter",
+      "level": "ERROR",
+      "appender": {
+        "type": "file",
+        "filename": "log/errors.log"
+      }
     }
   ]
 }

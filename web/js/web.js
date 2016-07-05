@@ -65,7 +65,8 @@ $(document).ready(function () {
                 for (var i = 0; i < keys.length; i++) {
                     var d = data[keys[i]];
                     currentData[d.id] = d;
-                    w += '<tr data-id="' + d.id + '">' +
+                    var hasGeomObj = !!d.geomObj['1'];
+                    w += '<tr data-id="' + d.id + '" data-geomobj="' + hasGeomObj + '">' +
                         '<td>' + d.id + '</td>' +
                         '<td>' + d.startDate + '</td>' +
                         '<td>' + d.regNumberSerial + '</td>' +
@@ -97,7 +98,7 @@ $(document).ready(function () {
                     $(this).addClass('success');
 
                     var d = currentData[+$(this).data('id')];
-                    if (d.geomObj) {
+                    if (d.geomObj['1']) {
                         var coordinates = d.geomObj['1'];
 
                         var myGeoObject = new ymaps.GeoObject({
