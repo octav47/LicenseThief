@@ -12,7 +12,8 @@
     "querystring": "*",
     "iconv-lite": "*",
     "log4js": "*",
-    "transliteration": "*"
+    "transliteration": "*",
+    "vorpal": "*"
   },
   "author": "",
   "license": "ISC"

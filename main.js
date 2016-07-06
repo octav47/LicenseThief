@@ -8,7 +8,7 @@ var logger = require('log4js');
 logger.configure($.setting.logs);
 logger = logger.getLogger();
 
-//logger.setLevel('INFO');
+//logger.setLevel('ALL');
 
 var vidpi = $.license.vidpi.map(function (e) {
     return e.id;
@@ -72,4 +72,9 @@ function dfs() {
     });
 }
 
-dfs(0);
+function setLoggerLevel(level) {
+    logger.setGlobalLogLevel(level);
+}
+
+module.exports.update = dfs;
+module.exports.setLoggerLevel = setLoggerLevel;

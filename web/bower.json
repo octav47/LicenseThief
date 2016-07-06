@@ -1,0 +1,16 @@
+{
+  "name": "license thief web",
+  "version": "1.0.0",
+  "homepage": "",
+  "authors": [
+    "Kir Tribunsky"
+  ],
+  "description": "",
+  "keywords": [],
+  "license": "Apache-2.0",
+  "ignore": [],
+  "main": [],
+  "dependencies": {
+    "font-awesome": "latest"
+  }
+}

@@ -13,7 +13,14 @@ ymaps.ready(init);
 
 $(document).ready(function () {
     function createButton(options) {
-        return '<button data-id="' + options.id + '" type="button" class="btn btn-default">' + options.name + '</button>';
+        return '<div class="row"><p><button jc-act data-id="' + options.id + '" type="button" class="btn btn-default">' + options.name + '</button></p></div>';
+    }
+
+    function goToByScroll(selector) {
+        $('html,body').animate({
+                scrollTop: $(selector).first().offset().top
+            },
+            'slow');
     }
 
     var loading = $('#loading');
@@ -28,21 +35,33 @@ $(document).ready(function () {
 
     var vidpiMap = module.exports.license.vidpiMap;
 
+    var cols = [];
+    for (var i = 0; i < 3; i++) {
+        cols.push($('<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12"></div>'));
+    }
+    var k = 0;
     for (var i in vidpiMap) {
         if (vidpiMap.hasOwnProperty(i)) {
-            licenseButtons.append(createButton({
+            cols[k].append(createButton({
                 id: i,
                 name: vidpiMap[i].name
             }));
+            k++;
+            if (k === 3) {
+                k = 0;
+            }
         }
     }
+    cols.forEach(function (e) {
+        licenseButtons.append(e);
+    });
 
-    licenseButtons.find('> button').on('click', function () {
+    licenseButtons.find('button[jc-act]').on('click', function () {
         map.setCenter([55.73, 37.75]);
         map.setZoom(4);
         map.geoObjects.removeAll();
 
-        licenseButtons.find('> button')
+        licenseButtons.find('button[jc-act]')
             .addClass('btn-default')
             .removeClass('btn-success');
         $(this)
@@ -80,7 +99,6 @@ $(document).ready(function () {
                         '<td>' + d.stateOffice + '</td>' +
                         '<td>' + d.stateGov + '</td>' +
                         '<td>' + d.endDate + '</td>' +
-                        '<td>' + d.id + '</td>' +
                         '</tr>';
                 }
                 tbody
@@ -109,7 +127,7 @@ $(document).ready(function () {
                                 ],
                                 fillRule: "nonZero"
                             },
-                            properties:{
+                            properties: {
                                 balloonContent: "Многоугольник"
                             }
                         }, {
@@ -123,6 +141,8 @@ $(document).ready(function () {
                         map.setCenter(coordinates[0]);
                         map.setZoom(10);
                         map.geoObjects.add(myGeoObject);
+
+                        goToByScroll('#map');
                     }
                 })
             }

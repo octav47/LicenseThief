@@ -15,7 +15,7 @@ function getGeoData(i) {
     var count = 0;
 
     if (i == 11) {
-        logger.fatal('All geo data is downloaded');
+        logger.info('All geo data is downloaded');
         return;
     }
     var json = require('./license/' + (i + 1) + '.json');
