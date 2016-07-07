@@ -1,4 +1,12 @@
 ﻿var conf = {
+    database: {
+        user: 'lthief',
+        database: 'lthief',
+        password: 'lthief',
+        port: 5432,
+        max: 10,
+        idleTimeoutMillis: 30000,
+    },
     setting: {
         logs: 'conf/logger.json', // путь до конфигурации log4js
         geo: false, // скачивает лицензии с гео-данными

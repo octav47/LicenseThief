@@ -7,13 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "gulp": "^3.8.11",
-    "rimraf": "^2.3.1",
+    "gulp": "*",
+    "rimraf": "*",
     "querystring": "*",
     "iconv-lite": "*",
     "log4js": "*",
     "transliteration": "*",
-    "vorpal": "*"
+    "vorpal": "*",
+    "pg": "*"
   },
   "author": "",
   "license": "ISC"
