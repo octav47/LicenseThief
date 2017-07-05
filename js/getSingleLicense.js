@@ -230,13 +230,17 @@ function getSingleLicense(settings) {
                 //var f1 = false, f2 = false;
                 var f3 = appendFullData(r.noGeoObj);
 
-                if (!f1 && !f2 && !f3) {
+                if (!f1 && !f2) {
                     logger.info('Saving ' + vidpi[0] + '.json');
                     var totalFileName = $.output.specifiedTotal(vidpi[0]);
                     fs.writeFileSync(totalFileName, JSON.stringify($.fullData, null, 4), 'utf-8');
                     $.fullData = {};
                     httpListener.fulfill();
                     return;
+                } else {
+                    logger.warn('f1', f1)
+                    logger.warn('f2', f2)
+                    logger.warn('f3', f3)
                 }
 
                 logger.debug('Page ' + settings.data.page + ' is ended, next...');
@@ -250,7 +254,7 @@ function getSingleLicense(settings) {
 
         req.write(data);
         req.end();
-    }, 1);
+    }, 150);
 }
 
 /**
